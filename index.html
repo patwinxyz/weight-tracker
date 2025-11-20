@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/weight-tracker/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>體重與飲食記錄</title>
+  <script type="module" crossorigin src="/weight-tracker/assets/index-DmU6bygP.js"></script>
+  <link rel="stylesheet" crossorigin href="/weight-tracker/assets/index-CkF8Y1bM.css">
+</head>
+
+<body>
+  <div id="app">
+    <header>
+      <h1>體重與飲食記錄</h1>
+    </header>
+
+    <main>
+      <section id="dashboard">
+        <div class="card">
+          <h2>目前體重</h2>
+          <p id="current-weight-display">-- kg</p>
+        </div>
+        <div class="card chart-container">
+          <canvas id="weight-chart"></canvas>
+        </div>
+      </section>
+
+      <section id="input-forms">
+        <div class="card">
+          <h2>記錄今日數據</h2>
+          <div class="form-group">
+            <label for="entry-date">日期</label>
+            <input type="date" id="entry-date" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="weight-input">體重 (kg)</label>
+              <div class="input-group">
+                <input type="number" id="weight-input" step="0.1" placeholder="例如: 70.5" />
+                <button id="save-weight-btn">儲存體重</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="food-input">食物項目</label>
+            <div class="input-group">
+              <input type="text" id="food-input" placeholder="例如: 燕麥粥加莓果" />
+              <select id="meal-type">
+                <option value="早餐">早餐</option>
+                <option value="午餐">午餐</option>
+                <option value="晚餐">晚餐</option>
+                <option value="點心">點心</option>
+              </select>
+              <button id="save-food-btn">新增食物</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="history">
+        <h2>歷史記錄</h2>
+        <div id="history-list">
+          <!-- History items will be injected here -->
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+</html>
