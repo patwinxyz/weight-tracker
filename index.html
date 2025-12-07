@@ -13,59 +13,73 @@
   <div id="app">
     <header>
       <h1>體重與飲食記錄</h1>
+      <div id="user-profile" style="display: none;">
+        <span id="user-name"></span>
+        <button id="logout-btn">登出</button>
+      </div>
     </header>
 
     <main>
-      <section id="dashboard">
-        <div class="card">
-          <h2>目前體重</h2>
-          <p id="current-weight-display">-- kg</p>
-        </div>
-        <div class="card chart-container">
-          <canvas id="weight-chart"></canvas>
-        </div>
-      </section>
+      <div id="login-container" style="text-align: center; margin-top: 50px;">
+        <p>請先登入以開始記錄您的體重與飲食。</p>
+        <button id="login-btn" style="padding: 10px 20px; font-size: 1.2em; cursor: pointer;">
+          使用 Google 登入
+        </button>
+      </div>
 
-      <section id="input-forms">
-        <div class="card">
-          <h2>記錄今日數據</h2>
-          <div class="form-group">
-            <label for="entry-date">日期</label>
-            <input type="date" id="entry-date" />
+      <div id="app-content" style="display: none;">
+        <section id="dashboard">
+          <div class="card">
+            <h2>目前體重</h2>
+            <p id="current-weight-display">-- kg</p>
           </div>
+          <div class="card chart-container">
+            <canvas id="weight-chart"></canvas>
+          </div>
+        </section>
 
-          <div class="form-row">
+        <section id="input-forms">
+          <div class="card">
+            <h2>記錄今日數據</h2>
             <div class="form-group">
-              <label for="weight-input">體重 (kg)</label>
+              <label for="entry-date">日期</label>
+              <input type="date" id="entry-date" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="weight-input">體重 (kg)</label>
+                <div class="input-group">
+                  <input type="number" id="weight-input" step="0.1" placeholder="例如: 70.5" />
+                  <button id="save-weight-btn">儲存體重</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="food-input">食物項目</label>
               <div class="input-group">
-                <input type="number" id="weight-input" step="0.1" placeholder="例如: 70.5" />
-                <button id="save-weight-btn">儲存體重</button>
+                <input type="text" id="food-input" placeholder="例如: 燕麥粥加莓果" />
+                <select id="meal-type">
+                  <option value="早餐">早餐</option>
+                  <option value="午餐">午餐</option>
+                  <option value="晚餐">晚餐</option>
+                  <option value="點心">點心</option>
+                </select>
+                <button id="save-food-btn">新增食物</button>
               </div>
             </div>
           </div>
+        </section>
 
-          <div class="form-group">
-            <label for="food-input">食物項目</label>
-            <div class="input-group">
-              <input type="text" id="food-input" placeholder="例如: 燕麥粥加莓果" />
-              <select id="meal-type">
-                <option value="早餐">早餐</option>
-                <option value="午餐">午餐</option>
-                <option value="晚餐">晚餐</option>
-                <option value="點心">點心</option>
-              </select>
-              <button id="save-food-btn">新增食物</button>
-            </div>
+        <section id="history">
+          <h2>歷史記錄</h2>
+          <div id="history-list">
+            <!-- History items will be injected here -->
           </div>
-        </div>
-      </section>
-
-      <section id="history">
-        <h2>歷史記錄</h2>
-        <div id="history-list">
-          <!-- History items will be injected here -->
-        </div>
-      </section>
+        </section>
+        </section>
+      </div>
     </main>
   </div>
   <script type="module" src="/src/main.js"></script>

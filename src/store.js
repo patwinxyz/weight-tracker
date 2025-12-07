@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, arrayUnion, arrayRemove, query, orderBy } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -14,6 +15,34 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+export { auth };
+
+// Authentication Functions
+export const loginWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    return result.user;
+  } catch (error) {
+    console.error("Login failed:", error);
+    throw error;
+  }
+};
+
+export const logout = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Logout failed:", error);
+    throw error;
+  }
+};
+
+export const subscribeToAuthChanges = (callback) => {
+  return onAuthStateChanged(auth, callback);
+};
 
 export const getTodayDate = () => {
   const today = new Date();
@@ -21,8 +50,9 @@ export const getTodayDate = () => {
 };
 
 // Load data from Firestore
-export const loadData = async () => {
-  const q = query(collection(db, "daily_logs"), orderBy("date", "asc"));
+export const loadData = async (userId) => {
+  if (!userId) return [];
+  const q = query(collection(db, `users/${userId}/daily_logs`), orderBy("date", "asc"));
   const querySnapshot = await getDocs(q);
   const data = [];
   querySnapshot.forEach((doc) => {
@@ -32,8 +62,10 @@ export const loadData = async () => {
 };
 
 // Add or update entry in Firestore
-export const addOrUpdateEntry = async (date, type, value) => {
-  const docRef = doc(db, "daily_logs", date);
+// Add or update entry in Firestore
+export const addOrUpdateEntry = async (userId, date, type, value) => {
+  if (!userId) throw new Error("User not logged in");
+  const docRef = doc(db, `users/${userId}/daily_logs`, date);
 
   // Check if document exists is tricky without reading, but setDoc with merge handles creation
   // However, we need to know current state for arrays if we want to be precise, 
@@ -52,7 +84,7 @@ export const addOrUpdateEntry = async (date, type, value) => {
         food: arrayUnion(value)
       }, { merge: true });
     }
-    return await loadData(); // Reload to get fresh state
+    return await loadData(userId); // Reload to get fresh state
   } catch (e) {
     console.error("Error adding document: ", e);
     alert("儲存失敗，請檢查網路連線");
@@ -61,13 +93,14 @@ export const addOrUpdateEntry = async (date, type, value) => {
 };
 
 // Delete food item
-export const deleteFoodItem = async (date, foodItem) => {
-  const docRef = doc(db, "daily_logs", date);
+export const deleteFoodItem = async (userId, date, foodItem) => {
+  if (!userId) throw new Error("User not logged in");
+  const docRef = doc(db, `users/${userId}/daily_logs`, date);
   try {
     await updateDoc(docRef, {
       food: arrayRemove(foodItem)
     });
-    return await loadData();
+    return await loadData(userId);
   } catch (e) {
     console.error("Error removing document: ", e);
     alert("刪除失敗");
